@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hukum Gauss | Bahan Ajar Interaktif</title>
+<style>
+:root{--bg:#07111f;--card:#101f33;--text:#eaf4ff;--muted:#9fb3c8;--a:#38bdf8;--b:#8b5cf6;--ok:#22c55e;--warn:#f59e0b}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#07111f,#0b1d35);color:var(--text)}
+body.light{--bg:#f3f7fb;--card:#fff;--text:#172033;--muted:#607086;background:#eef5fb;color:var(--text)}
+#loader{position:fixed;inset:0;background:#050b15;display:flex;align-items:center;justify-content:center;z-index:9999;transition:.7s}
+.loadbox{text-align:center;width:min(500px,90%)} .bolt{font-size:80px;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.18);filter:drop-shadow(0 0 20px #38bdf8)}}
+.bar{height:12px;background:#17263b;border-radius:20px;overflow:hidden;margin:20px 0}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:.1s}
+button{border:0;border-radius:12px;padding:12px 18px;font-weight:bold;cursor:pointer;background:linear-gradient(90deg,var(--a),var(--b));color:white;margin:4px}
+button.secondary{background:#24364e} button:hover{transform:translateY(-2px)}
+nav{position:sticky;top:0;z-index:50;background:rgba(5,12,24,.93);backdrop-filter:blur(10px);padding:10px 4%;display:flex;gap:8px;align-items:center;overflow:auto}
+.brand{font-weight:800;white-space:nowrap;color:#7dd3fc}.navlinks{display:flex;gap:5px}.navlinks a{color:#d8e9ff;text-decoration:none;padding:8px 10px;border-radius:8px;white-space:nowrap}.navlinks a:hover{background:#17304b}
+main{max-width:1180px;margin:auto;padding:20px}.hero{min-height:430px;display:grid;grid-template-columns:1.1fr .9fr;gap:25px;align-items:center}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);margin:0;background:linear-gradient(90deg,#7dd3fc,#c4b5fd);-webkit-background-clip:text;color:transparent}
+.card{background:rgba(16,31,51,.92);border:1px solid rgba(125,211,252,.16);border-radius:20px;padding:22px;margin:18px 0;box-shadow:0 12px 35px rgba(0,0,0,.18)}
+.light .card{background:white}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.tag{display:inline-block;padding:6px 10px;background:#153b58;border-radius:20px;color:#7dd3fc}
+section{scroll-margin-top:70px;padding-top:15px}h2{color:#7dd3fc}.muted{color:var(--muted);line-height:1.7}
+.visual{height:330px;background:radial-gradient(circle,#123a60,#081321 65%);border-radius:22px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.charge{width:72px;height:72px;border-radius:50%;background:#ef4444;display:grid;place-items:center;font-size:36px;font-weight:bold;box-shadow:0 0 30px #ef4444}
+.surface{position:absolute;width:250px;height:250px;border:3px dashed #7dd3fc;border-radius:50%;animation:spin 18s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.rays{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg,transparent 0 8deg,rgba(125,211,252,.12) 9deg 10deg)}
+.controls label{display:block;margin-top:12px}.controls input{width:100%}.result{font-size:1.2rem;padding:14px;background:#091a2d;border-radius:12px;margin-top:15px}
+.light .result{background:#edf4fa;color:#172033}
+canvas{width:100%;max-width:650px;height:auto;background:#06101c;border-radius:16px;border:1px solid #24506f}
+.question{padding:16px;border-left:4px solid var(--a);margin:12px 0;background:#0a1828;border-radius:10px}.light .question{background:#f0f6fb}
+.option{display:block;width:100%;text-align:left;background:#20364e;margin:6px 0}.feedback{font-weight:bold;margin-top:8px}.hidden{display:none}
+.progress{height:13px;background:#17263b;border-radius:20px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#22c55e,#38bdf8)}
+.badges span{display:inline-block;padding:10px;margin:5px;border-radius:12px;background:#182d43}.locked{opacity:.35;filter:grayscale(1)}
+footer{text-align:center;padding:45px 20px;background:#050b15;margin-top:40px}.formula{font-size:1.7rem;padding:18px;text-align:center;background:#102943;border-radius:14px}
+#top{position:fixed;right:20px;bottom:20px;z-index:60}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.navlinks{display:none}.visual{height:280px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div id="loader"><div class="loadbox"><div class="bolt">⚡</div><h1>HUKUM GAUSS</h1><p id="loadText">Menyiapkan Petualangan Belajar Fisika...</p><div class="bar"><i id="loadBar"></i></div><b id="percent">0%</b><br><button id="startBtn" class="hidden" onclick="start()">🚀 MULAI BELAJAR</button></div></div>
+
+<nav>
+<div class="brand">⚡ HUKUM GAUSS</div>
+<div class="navlinks">
+<a href="#beranda">Beranda</a><a href="#konsep">Konsep</a><a href="#fluks">Fluks</a><a href="#gauss">Hukum Gauss</a><a href="#simulasi">Simulasi</a><a href="#lab">Lab</a><a href="#latihan">Latihan</a><a href="#evaluasi">Evaluasi</a>
+</div>
+<button onclick="toggleTheme()">☀️/🌙</button>
+</nav>
+
+<main>
+<section id="beranda" class="hero">
+<div><span class="tag">Fisika Kelas XII SMA</span><h1>HUKUM<br>GAUSS ⚡</h1><p class="muted">Memahami hubungan antara muatan listrik, medan listrik, fluks listrik, dan permukaan Gaussian dengan cara visual, sederhana, dan interaktif.</p><button onclick="document.querySelector('#konsep').scrollIntoView()">🚀 Mulai Petualangan</button><button class="secondary" onclick="document.querySelector('#peta').scrollIntoView()">📚 Peta Materi</button></div>
+<div class="visual"><div class="rays"></div><div class="surface"></div><div class="charge">+</div></div>
+</section>
+
+<section id="tujuan"><div class="card"><h2>🎯 Tujuan Pembelajaran</h2><div class="grid"><div>✓ Menjelaskan fluks listrik</div><div>✓ Memahami permukaan Gaussian</div><div>✓ Menjelaskan Hukum Gauss</div><div>✓ Memilih simetri yang tepat</div><div>✓ Menyelesaikan soal LOTS–HOTS</div></div></div></section>
+
+<section id="peta"><div class="card"><h2>🗺️ Peta Konsep</h2><div class="grid">
+<div class="card">Muatan Listrik →</div><div class="card">Medan Listrik →</div><div class="card">Garis Medan →</div><div class="card">Fluks Listrik →</div><div class="card">Permukaan Gaussian →</div><div class="card">Hukum Gauss → Penerapan</div>
+</div></div></section>
+
+<section id="konsep"><div class="card"><h2>💡 1. Dari Mana Kita Mulai?</h2>
+<p class="muted"><b>Medan listrik</b> adalah daerah di sekitar muatan yang masih mengalami pengaruh gaya listrik. Bayangkan muatan seperti kipas angin: kita tidak melihat anginnya, tetapi kita dapat merasakan pengaruhnya.</p>
+<div class="grid"><div class="card"><h3>➕ Muatan Positif</h3><p>Garis medan keluar dari muatan positif.</p></div><div class="card"><h3>➖ Muatan Negatif</h3><p>Garis medan masuk menuju muatan negatif.</p></div></div></div></section>
+
+<section id="fluks"><div class="card"><h2>⚡ 2. Apa Itu Fluks Listrik?</h2>
+<p class="muted">Fluks listrik dapat dibayangkan sebagai <b>seberapa banyak garis medan listrik yang melewati sebuah permukaan</b>. Bayangkan hujan mengenai payung: semakin tepat payung menghadap hujan, semakin banyak air yang mengenainya.</p>
+<div class="formula">Φ = E × A × cos θ</div>
+<div class="grid"><div><b>Fluks besar</b><br>Medan kuat dan permukaan menghadap medan.</div><div><b>Fluks nol</b><br>Permukaan sejajar arah medan.</div></div>
+</div></section>
+
+<section id="simulasi"><div class="card"><h2>🧪 Simulasi Fluks Listrik</h2><p class="muted">Geser kontrol dan amati perubahan nilai secara langsung.</p>
+<div class="controls">
+<label>Kuat Medan E: <b id="eVal">50</b> N/C</label><input type="range" id="E" min="0" max="100" value="50">
+<label>Luas Permukaan A: <b id="aVal">50</b> m²</label><input type="range" id="A" min="0" max="100" value="50">
+<label>Sudut θ: <b id="tVal">0</b>°</label><input type="range" id="T" min="0" max="90" value="0">
+</div>
+<div class="result">Φ = <b id="flux">2500</b> Nm²/C<br><span id="fluxText">Fluks maksimum karena permukaan menghadap medan.</span></div>
+</div></section>
+
+<section id="gauss"><div class="card"><h2>🌐 3. Hukum Gauss</h2>
+<p class="muted">Sekarang kita menggunakan permukaan tertutup khayal untuk melihat hubungan antara muatan dan total fluks. <b>Yang paling penting: total fluks ditentukan oleh muatan yang berada di dalam permukaan.</b></p>
+<div class="formula">∮ E · dA = Q<sub>dalam</sub> / ε<sub>0</sub></div>
+<div class="grid"><div class="card"><h3>🔵 Muatan Titik</h3><p>Simetri bola → gunakan permukaan bola.</p></div><div class="card"><h3>🛢 Kawat Panjang</h3><p>Simetri silinder → gunakan silinder koaksial.</p></div><div class="card"><h3>▭ Bidang Luas</h3><p>Gunakan pillbox/silinder pendek.</p></div></div>
+</div></section>
+
+<section><div class="card"><h2>🔍 Mengapa Muatan di Luar Tidak Dihitung?</h2><p class="muted">Muatan di luar memang dapat menghasilkan medan pada permukaan. Namun, jumlah garis yang masuk dan keluar secara bersih saling menyeimbangkan. Karena itu, muatan tersebut tidak menambah <b>Q<sub>dalam</sub></b>.</p></div></section>
+
+<section id="gausssim"><div class="card"><h2>🔵 Simulasi Hukum Gauss</h2>
+<canvas id="canvas" width="650" height="420"></canvas>
+<div class="controls"><label>Muatan di dalam (μC)</label><input type="range" id="qin" min="-10" max="10" value="2"><label>Muatan di luar (μC)</label><input type="range" id="qout" min="-10" max="10" value="0"><label>Radius permukaan</label><input type="range" id="radius" min="80" max="170" value="130"></div>
+<div class="result">Q dalam = <b id="qinText">2</b> μC | Q luar = <b id="qoutText">0</b> μC<br>Fluks total ≈ <b id="gflux">225882</b> Nm²/C</div>
+</div></section>
+
+<section id="lab"><div class="card"><h2>🔬 Laboratorium Gauss</h2><div class="grid">
+<div class="card"><h3>Eksperimen 1</h3><b>Pengaruh Jumlah Muatan</b><p>Prediksi: jika muatan bertambah, apa yang terjadi pada fluks?</p><textarea placeholder="Tulis prediksi..." style="width:100%;height:70px"></textarea></div>
+<div class="card"><h3>Eksperimen 2</h3><b>Mengubah Radius</b><p>Ubah radius pada simulasi. Apakah total fluks berubah?</p></div>
+<div class="card"><h3>Eksperimen 3</h3><b>Muatan di Luar</b><p>Tambahkan muatan di luar permukaan. Apa yang berubah?</p></div>
+</div></div></section>
+
+<section id="latihan"><div class="card"><h2>📝 Latihan Bertingkat</h2><div id="quiz"></div><div class="progress"><i id="qprog"></i></div><p id="scoreText">Skor: 0 | XP: 0</p></div></section>
+
+<section id="evaluasi"><div class="card"><h2>🏆 Evaluasi & Refleksi</h2><div id="finalQuiz"></div><button onclick="showReflection()">📊 Lihat Hasil Belajar</button><div id="reflection" class="hidden"><h3>Refleksi Belajar</h3><p>Konsep yang paling saya pahami:</p><textarea style="width:100%;height:70px"></textarea><p>Tingkat pemahaman saya:</p><input type="range" min="1" max="5" value="3"> <span>1 Belum Paham — 5 Sangat Paham</span></div></div></section>
+
+<section><div class="card"><h2>🏅 Badge Belajar</h2><div class="badges"><span id="b1">🌱 Pemula Listrik</span><span id="b2" class="locked">⚡ Ahli Fluks</span><span id="b3" class="locked">🌐 Penjelajah Gauss</span><span id="b4" class="locked">🧠 Analis Medan</span><span id="b5" class="locked">🏆 Master Hukum Gauss</span></div></div></section>
+</main>
+
+<button id="top" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<footer><h2>HUKUM GAUSS ⚡</h2><p>Bahan Ajar Interaktif Fisika Kelas XII SMA</p><p><i>"Belajar Fisika Bukan Sekadar Menghafal Rumus, Tetapi Memahami Bagaimana Alam Bekerja."</i></p><hr><b>DESIGN BY<br>FREDYNANDUS TAKALAMINGAN, S.Si</b><p>SMA NEGERI 2 BITUNG • 2026</p></footer>
+
+<script>
+let loading=0; const timer=setInterval(()=>{loading+=4;loadBar.style.width=loading+'%';percent.textContent=Math.min(loading,100)+'%';if(loading>=100){clearInterval(timer);loadText.textContent='Siap memulai petualangan!';startBtn.classList.remove('hidden')}},60);
+function start(){loader.style.opacity=0;setTimeout(()=>loader.style.display='none',700)}
+function toggleTheme(){document.body.classList.toggle('light')}
+
+function updateFlux(){let e=+E.value,a=+A.value,t=+T.value; eVal.textContent=e;aVal.textContent=a;tVal.textContent=t;let f=e*a*Math.cos(t*Math.PI/180);flux.textContent=f.toFixed(2);fluxText.textContent=t==0?'Fluks maksimum karena permukaan menghadap medan.':t==90?'Fluks mendekati nol karena medan sejajar permukaan.':'Fluks berkurang karena permukaan miring.'}
+[E,A,T].forEach(x=>x.addEventListener('input',updateFlux));updateFlux();
+
+const c=document.getElementById('canvas'),ctx=c.getContext('2d');
+function draw(){let qi=+qin.value,qo=+qout.value,r=+radius.value;qinText.textContent=qi;qoutText.textContent=qo;let eps=8.854e-12;let fl=(qi*1e-6)/eps;gflux.textContent=fl.toExponential(3);
+ctx.clearRect(0,0,c.width,c.height);let x=300,y=210;
+ctx.strokeStyle='#7dd3fc';ctx.lineWidth=3;ctx.setLineDash([8,7]);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+for(let i=0;i<16;i++){let ang=i*Math.PI*2/16;ctx.strokeStyle='rgba(125,211,252,.45)';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(ang)*Math.min(r+80,200),y+Math.sin(ang)*Math.min(r+80,200));ctx.stroke()}
+ctx.fillStyle=qi>=0?'#ef4444':'#60a5fa';ctx.beginPath();ctx.arc(x,y,25,0,Math.PI*2);ctx.fill();ctx.fillStyle='white';ctx.font='bold 24px Arial';ctx.fillText(qi>=0?'+':'−',x-8,y+8);
+ctx.fillStyle=qo>=0?'#ef4444':'#60a5fa';ctx.beginPath();ctx.arc(560,120,20,0,Math.PI*2);ctx.fill();ctx.fillStyle='white';ctx.fillText(qo>=0?'+':'−',554,128);
+ctx.fillStyle='#d8e9ff';ctx.font='16px Arial';ctx.fillText('Permukaan Gaussian',x-80,y-r-15);ctx.fillText('Muatan di luar',510,75)}
+[qin,qout,radius].forEach(x=>x.addEventListener('input',draw));draw();
+
+const questions=[
+{lvl:'LOTS',q:'Apa yang dimaksud dengan fluks listrik?',o:['Jumlah garis medan yang melewati permukaan','Jumlah elektron','Gaya gravitasi','Energi kinetik'],a:0,e:'Fluks menunjukkan seberapa besar medan listrik yang menembus permukaan.'},
+{lvl:'LOTS',q:'Muatan yang dihitung dalam Hukum Gauss adalah...',o:['Semua muatan','Muatan di dalam permukaan','Hanya muatan positif','Hanya muatan negatif'],a:1,e:'Yang menentukan fluks bersih adalah muatan total yang terkurung.'},
+{lvl:'MOTS',q:'Permukaan terbaik untuk muatan titik adalah...',o:['Kubus','Bola','Segitiga','Tabung acak'],a:1,e:'Muatan titik memiliki simetri bola.'},
+{lvl:'MOTS',q:'Jika Qdalam = 0, maka fluks bersih adalah...',o:['Maksimum','Tidak tentu','Nol','Selalu positif'],a:2,e:'Hukum Gauss: Φ = Qdalam/ε₀, sehingga jika Qdalam nol maka fluks bersih nol.'},
+{lvl:'HOTS',q:'Mengapa radius permukaan Gaussian dapat berubah tanpa mengubah fluks total?',o:['Karena medan tidak berubah','Karena fluks hanya bergantung pada Qdalam','Karena ε₀ berubah','Karena luas selalu sama'],a:1,e:'Walaupun E dan luas berubah, hasil totalnya tetap Qdalam/ε₀.'},
+{lvl:'HOTS',q:'Dua muatan +4 μC dan −4 μC berada di dalam permukaan. Fluks bersih?',o:['Positif','Negatif','Nol','Tidak dapat diketahui'],a:2,e:'Muatan total Qdalam = 0 μC sehingga fluks bersih nol.'}
+];
+let qiIndex=0,score=0,xp=0;
+function renderQuiz(){if(qiIndex>=questions.length){quiz.innerHTML='<h3>🎉 Latihan selesai!</h3><p>Kamu telah menyelesaikan LOTS, MOTS, dan HOTS.</p>';qprog.style.width='100%';unlock();return}
+let q=questions[qiIndex];quiz.innerHTML=`<div class="question"><span class="tag">${q.lvl}</span><h3>${qiIndex+1}. ${q.q}</h3>${q.o.map((o,i)=>`<button class="option" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}<div id="feed" class="feedback"></div></div>`;qprog.style.width=(qiIndex/questions.length*100)+'%'}
+function answer(i){let q=questions[qiIndex],f=document.getElementById('feed');if(i===q.a){score+=10;xp+=q.lvl==='HOTS'?50:q.lvl==='MOTS'?30:20;f.innerHTML='✓ BENAR! '+q.e;f.style.color='#4ade80'}else{f.innerHTML='✗ Belum tepat. '+q.e;f.style.color='#fbbf24'}scoreText.textContent=`Skor: ${score} | XP: ${xp}`;document.querySelectorAll('.option').forEach(b=>b.disabled=true);setTimeout(()=>{qiIndex++;renderQuiz()},1800)}
+function unlock(){['b2','b3','b4','b5'].forEach((id,i)=>{if(score>=(i+1)*10)document.getElementById(id).classList.remove('locked')})}
+renderQuiz();
+function showReflection(){reflection.classList.remove('hidden');let msg=score>=40?'🏆 Hasil sangat baik! Kamu sudah memahami konsep utama Hukum Gauss.':'📚 Terus berlatih! Ulangi simulasi dan perhatikan hubungan Qdalam dengan fluks.';reflection.insertAdjacentHTML('afterbegin','<div class="result">'+msg+'</div>')}
+</script>
+</body>
+</html>
